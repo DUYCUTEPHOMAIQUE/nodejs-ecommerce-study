@@ -1,12 +1,11 @@
 const app = require("./src/app");
 
-const PORT = 3055;
+const PORT = process.env.PORT || 3052;
 
 const server = app.listen(PORT, () => {
   console.log(`WSV eCommerce start with port ${PORT}`);
 });
 
 process.on("SIGINT", () => {
-  console.log(`Exit Server Express `);
-  process.exit(0);
+  server.close(() => console.log(`Stopped Server`));
 });

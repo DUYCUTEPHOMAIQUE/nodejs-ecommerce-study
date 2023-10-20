@@ -1,18 +1,5 @@
 "use strict";
 
-//level 0
-
-// const config = {
-//   app: {
-//     port: 3000,
-//   },
-//   db: {
-//     host: "localost",
-//     port: 27017,
-//     name: "db",
-//   },
-// };
-
 //lv1
 
 const dev = {
@@ -40,4 +27,5 @@ const pro = {
 const config = { dev, pro };
 const env = process.env.NODE_ENV || "dev";
 
+console.log(config([env], env));
 module.exports = config[env];
