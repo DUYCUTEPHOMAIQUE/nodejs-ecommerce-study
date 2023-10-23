@@ -5,15 +5,15 @@ const { Schema, model } = require("mongoose");
 const DOCUMENT_NAME = "Key";
 const COLLECTION_NAME = "Keys";
 // Declare the Schema of the Mongo model
-var keyTokenSchema = new mongoose.Schema(
+const keyTokenSchema = new Schema(
   {
     user: {
-      type: SchemaType.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       required: true,
       ref: "Shop",
     },
     publicKey: {
-      ttype: String,
+      type: String,
       required: true,
     },
     resfreshToken: {
@@ -28,4 +28,4 @@ var keyTokenSchema = new mongoose.Schema(
 );
 
 //Export the model
-module.exports = mongoose.model(DOCUMENT_NAME, keyTokenSchema, COLLECTIONNAME);
+module.exports = model(DOCUMENT_NAME, keyTokenSchema);
