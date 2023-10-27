@@ -4,9 +4,10 @@
 ###signup
 POST {{url_dev}}/shop/signup
 Content-Type: application/json
+x-api-key: b2e08d57a86d0f5750e38a83f510f1c55d17b92ff8f0e21c1f2c972289c22b5f96a5c2964c3bf1f79c64189ed3c8f1c58794943883505a673de3254bdb9621ee
 
 {
     "name": "shop Tipjs",
-    "email": "toptipjs2@gmail.com",
+    "email": "tipjavascript24@gmail.com",
     "password": "abc123"
 }
