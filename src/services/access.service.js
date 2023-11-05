@@ -8,7 +8,10 @@ const { createTokenPair } = require("../auth/authUtils");
 const {
   BadRequestError,
   ConflictRequestError,
+  AuthFailureError,
 } = require("../core/error.response");
+const { findByEmail } = require("./shop.service");
+const { getInfoData } = require("../utils");
 
 const RoleShop = {
   SHOP: "SHOP",
@@ -18,6 +21,46 @@ const RoleShop = {
 };
 
 class AccessService {
+  static logout = async (keyStore) => {
+    const delKey = await KeyTokenService.removeKeyById(keyStore._id);
+    console.log("delKey: " + delKey);
+    return delKey;
+  };
+
+  static login = async ({ email, password, refreshToken = null }) => {
+    const foundShop = await findByEmail({ email });
+    if (!foundShop) throw new BadRequestError("Shop not registed");
+    // console.log("######found shop", foundShop);
+    const match = bcrypt.compare(password, foundShop.password);
+
+    if (!match) throw new AuthFailureError("Authentication Error");
+
+    const privateKey = crypto.randomBytes(64).toString("hex");
+    const publicKey = crypto.randomBytes(64).toString("hex");
+
+    const { _id: userId } = foundShop;
+    const tokens = await createTokenPair(
+      { userId, email },
+      publicKey,
+      privateKey
+    );
+
+    await KeyTokenService.createKeyToken({
+      refreshToken: tokens.refreshToken,
+      privateKey,
+      publicKey,
+      userId,
+    });
+
+    return {
+      shop: getInfoData({
+        fileds: ["_id", "name", "email"],
+        object: foundShop,
+      }),
+      tokens,
+    };
+  };
+
   static signUp = async ({ name, email, password }) => {
     const holderShop = await shopModel.findOne({ email }).lean();
     if (holderShop) {
@@ -44,7 +87,6 @@ class AccessService {
         publicKey,
         privateKey,
       });
-
       if (!keyStore) {
         return {
           code: "xxx",
@@ -63,7 +105,10 @@ class AccessService {
       return {
         code: 201,
         metadata: {
-          shop: newShop,
+          shop: getInfoData({
+            fileds: ["_id", "name", "email"],
+            object: newShop,
+          }),
           tokens,
         },
       };
