@@ -7,12 +7,18 @@
   </head>
   <body>
     <script>
-      const obj = {
-        dog: "gau",
-        cat: "meow",
-      };
-      const { dog: dogContent } = obj;
-      console.log(dogContent);
+      class Person {
+        constructor(name, age) {
+          this.name = name;
+          this.age = age;
+        }
+      }
+      class Student extends Person {
+        sayHello() {
+          console.log(`Hello ${this.name} i'm ${this.age}`);
+        }
+      }
+      const st1 = new Student({"John", 14}).sayHello();
     </script>
   </body>
 </html>

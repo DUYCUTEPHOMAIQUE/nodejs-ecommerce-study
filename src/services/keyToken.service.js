@@ -35,9 +35,7 @@ class KeyTokenService {
   };
 
   static findByUserId = async ({ userId }) => {
-    const result = await keytokenModel
-      .findOne({ user: new ObjectId(userId) })
-      .lean();
+    const result = await keytokenModel.findOne({ user: new ObjectId(userId) });
     return result;
   };
 
@@ -47,6 +45,22 @@ class KeyTokenService {
     });
     console.log("result", result);
     return result;
+  };
+  static findByRefreshTokenUsed = async (refreshToken) => {
+    return keytokenModel.findOne({
+      resfreshTokensUsed: { $elemMatch: { $eq: refreshToken } },
+    });
+  };
+
+  static deleteByKey = async (userId) => {
+    return keytokenModel.deleteOne({ user: userId });
+  };
+  static findByRefreshToken = async (refreshToken) => {
+    // const result = keytokenModel.findOne({ refreshToken });
+    // console.log("###result", result);
+    // console.log("errrr###");
+    console.log("###result", refreshToken);
+    return keytokenModel.findOne({ refreshToken: refreshToken });
   };
 }
 
